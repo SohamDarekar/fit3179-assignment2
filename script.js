@@ -3165,7 +3165,7 @@ const map1 = {
       type: "quantitative",
       title: "Threatened Species",
       scale: {
-        range: ["#22303e", "#344556", "#516678", STATUS_COLORS["Critically Endangered"]],
+        range: ["#fff5e6", "#ffc966", "#ff8c42", "#d1495b"],
         domainMin: 0,
       },
       legend: { orient: "bottom-right", titleFontSize: 11 },
