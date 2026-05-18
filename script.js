@@ -1,12 +1,27 @@
 // Shared chart colors and theme
 const STATUS_COLORS = {
-  "Critically Endangered": "#d64e2a",
-  Endangered: "#e8952e",
-  Vulnerable: "#c5b044",
-  Extinct: "#7c3aed",
-  "Conservation Dependent": "#4b8a6e",
-  "Extinct in the wild": "#9333ea",
+  "Critically Endangered": "#d1495b",
+  Endangered: "#f08c2e",
+  Vulnerable: "#d6b43f",
+  Extinct: "#7b61d1",
+  "Conservation Dependent": "#6f9f86",
+  "Extinct in the wild": "#9a7bd8",
 };
+
+const STATUS_RANGE = [
+  STATUS_COLORS["Critically Endangered"],
+  STATUS_COLORS.Endangered,
+  STATUS_COLORS.Vulnerable,
+  STATUS_COLORS.Extinct,
+];
+
+const STATUS_RANGE_THREE = [
+  STATUS_COLORS["Critically Endangered"],
+  STATUS_COLORS.Endangered,
+  STATUS_COLORS.Vulnerable,
+];
+
+const MAMMAL_COLOR = "#7fb39a";
 
 const STATUS_ORDER = [
   "Critically Endangered",
@@ -15,33 +30,55 @@ const STATUS_ORDER = [
   "Extinct",
 ];
 
-const BG = "#1e2230";
-const BG2 = "#161922";
-const TEXT = "#e8e4dc";
-const TEXT2 = "#a09888";
-const GRID = "#2a2f42";
+const BG = "#0c1117";
+const BG2 = "#131a22";
+const BG3 = "#18222f";
+const PANEL = "#1a2431";
+const BORDER = "#2f3d4c";
+const TEXT = "#f4f1eb";
+const TEXT2 = "#c0b8aa";
+const TEXT3 = "#8f98a5";
+const GRID = "#2f3d4c";
+
+const tooltipHandler = new vegaTooltip.Handler({ theme: "story" });
+const embedOptions = {
+  actions: false,
+  renderer: "svg",
+  tooltip: tooltipHandler.call,
+};
 
 const baseConfig = {
   background: "transparent",
   view: { stroke: "transparent" },
   axis: {
-    domainColor: GRID,
+    domainColor: BORDER,
+    domainWidth: 1,
     gridColor: GRID,
-    tickColor: GRID,
+    gridOpacity: 0.18,
+    tickColor: BORDER,
     labelColor: TEXT2,
     titleColor: TEXT2,
     labelFont: "Source Sans 3, sans-serif",
     titleFont: "Source Sans 3, sans-serif",
     labelFontSize: 11,
     titleFontSize: 12,
-    titleFontWeight: 400,
+    titleFontWeight: 600,
+    labelPadding: 6,
+    titlePadding: 10,
+    tickSize: 5,
+    labelLimit: 240,
   },
   legend: {
     labelColor: TEXT2,
-    titleColor: TEXT2,
+    titleColor: TEXT,
     labelFont: "Source Sans 3, sans-serif",
     titleFont: "Source Sans 3, sans-serif",
     labelFontSize: 11,
+    titleFontSize: 11,
+    titleFontWeight: 600,
+    labelLimit: 220,
+    symbolStrokeColor: BG,
+    symbolStrokeWidth: 1,
   },
   title: {
     color: TEXT,
@@ -625,38 +662,6 @@ const TOP_FAM = [
   { family: "Muridae", status: "Critically Endangered", count: 1 },
   { family: "Muridae", status: "Endangered", count: 7 },
   { family: "Muridae", status: "Vulnerable", count: 11 },
-];
-
-const HABITAT = [
-  { habitat: "Terrestrial", status: "Critically Endangered", count: 780 },
-  { habitat: "Terrestrial", status: "Endangered", count: 1450 },
-  { habitat: "Terrestrial", status: "Vulnerable", count: 890 },
-  { habitat: "Arboreal", status: "Critically Endangered", count: 23 },
-  { habitat: "Arboreal", status: "Endangered", count: 20 },
-  { habitat: "Arboreal", status: "Vulnerable", count: 46 },
-  { habitat: "Aquatic", status: "Critically Endangered", count: 45 },
-  { habitat: "Aquatic", status: "Endangered", count: 52 },
-  { habitat: "Aquatic", status: "Vulnerable", count: 38 },
-  {
-    habitat: "Coastal/Shoreline",
-    status: "Critically Endangered",
-    count: 28,
-  },
-  { habitat: "Coastal/Shoreline", status: "Endangered", count: 146 },
-  { habitat: "Coastal/Shoreline", status: "Vulnerable", count: 89 },
-  {
-    habitat: "Savanna/Woodland",
-    status: "Critically Endangered",
-    count: 18,
-  },
-  { habitat: "Savanna/Woodland", status: "Endangered", count: 146 },
-  { habitat: "Savanna/Woodland", status: "Vulnerable", count: 65 },
-  { habitat: "Wetland", status: "Critically Endangered", count: 5 },
-  { habitat: "Wetland", status: "Endangered", count: 2 },
-  { habitat: "Wetland", status: "Vulnerable", count: 8 },
-  { habitat: "Marine", status: "Critically Endangered", count: 12 },
-  { habitat: "Marine", status: "Endangered", count: 18 },
-  { habitat: "Marine", status: "Vulnerable", count: 22 },
 ];
 
 const POP_TREND = [
@@ -2986,7 +2991,7 @@ const chart1 = {
           "Vulnerable",
           "Extinct",
         ],
-        range: ["#d64e2a", "#e8952e", "#c5b044", "#7c3aed"],
+        range: STATUS_RANGE,
       },
       legend: {
         orient: "bottom",
@@ -3005,12 +3010,12 @@ const chart1 = {
     type: "arc",
     outerRadius: 128,
     innerRadius: 62,
-    stroke: "#0f1117",
+    stroke: BG,
     strokeWidth: 2,
   },
 };
 
-vegaEmbed("#chart1", chart1, { actions: false, renderer: "svg" });
+vegaEmbed("#chart1", chart1, embedOptions);
 
 const chart2 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3066,7 +3071,7 @@ const chart2 = {
           "Vulnerable",
           "Extinct",
         ],
-        range: ["#d64e2a", "#e8952e", "#c5b044", "#7c3aed"],
+        range: STATUS_RANGE,
       },
       legend: {
         orient: "bottom",
@@ -3083,7 +3088,7 @@ const chart2 = {
     ],
   },
 };
-vegaEmbed("#chart2", chart2, { actions: false, renderer: "svg" });
+vegaEmbed("#chart2", chart2, embedOptions);
 
 const chart3 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3116,7 +3121,7 @@ const chart3 = {
           "Vulnerable",
           "Extinct",
         ],
-        range: ["#d64e2a", "#e8952e", "#c5b044", "#7c3aed"],
+        range: STATUS_RANGE,
       },
       legend: { orient: "top", title: null, direction: "horizontal" },
     },
@@ -3131,7 +3136,7 @@ const chart3 = {
     ],
   },
 };
-vegaEmbed("#chart3", chart3, { actions: false, renderer: "svg" });
+vegaEmbed("#chart3", chart3, embedOptions);
 
 const map1 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3153,13 +3158,16 @@ const map1 = {
       },
     },
   ],
-  mark: { type: "geoshape", stroke: "#0f1117", strokeWidth: 1.5 },
+  mark: { type: "geoshape", stroke: BG, strokeWidth: 1.5 },
   encoding: {
     color: {
       field: "count",
       type: "quantitative",
       title: "Threatened Species",
-      scale: { scheme: "orangered", domainMin: 0 },
+      scale: {
+        range: ["#22303e", "#344556", "#516678", STATUS_COLORS["Critically Endangered"]],
+        domainMin: 0,
+      },
       legend: { orient: "bottom-right", titleFontSize: 11 },
     },
     tooltip: [
@@ -3168,7 +3176,7 @@ const map1 = {
     ],
   },
 };
-vegaEmbed("#map1", map1, { actions: false, renderer: "svg" });
+vegaEmbed("#map1", map1, embedOptions);
 
 const chart4 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3213,7 +3221,7 @@ const chart4 = {
           "Vulnerable",
           "Extinct",
         ],
-        range: ["#d64e2a", "#e8952e", "#c5b044", "#7c3aed"],
+        range: STATUS_RANGE,
       },
       legend: {
         orient: "bottom",
@@ -3234,7 +3242,7 @@ const chart4 = {
     ],
   },
 };
-vegaEmbed("#chart4", chart4, { actions: false, renderer: "svg" });
+vegaEmbed("#chart4", chart4, embedOptions);
 
 const chart5 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3278,7 +3286,7 @@ const chart5 = {
           title: "Single-State Endemic Threatened Species",
           axis: { grid: true, gridColor: GRID },
         },
-        color: { value: "#e8952e" },
+        color: { value: STATUS_COLORS.Endangered },
         tooltip: [
           { field: "state_full", title: "State" },
           { field: "endemic_threatened", title: "Single-State Endemics" },
@@ -3287,7 +3295,7 @@ const chart5 = {
     },
   ],
 };
-vegaEmbed("#chart5", chart5, { actions: false, renderer: "svg" });
+vegaEmbed("#chart5", chart5, embedOptions);
 
 const map2 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3303,8 +3311,8 @@ const map2 = {
       },
       mark: {
         type: "geoshape",
-        fill: "#1e2230",
-        stroke: "#3a3f55",
+        fill: BG3,
+        stroke: BORDER,
         strokeWidth: 1,
       },
     },
@@ -3320,7 +3328,7 @@ const map2 = {
       mark: {
         type: "circle",
         opacity: 0.7,
-        stroke: "#0f1117",
+        stroke: BG,
         strokeWidth: 0.5,
       },
       encoding: {
@@ -3331,7 +3339,7 @@ const map2 = {
           type: "nominal",
           scale: {
             domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: ["#d64e2a", "#e8952e", "#c5b044"],
+            range: STATUS_RANGE_THREE,
           },
           legend: {
             orient: "bottom-left",
@@ -3355,7 +3363,7 @@ const map2 = {
     },
   ],
 };
-vegaEmbed("#map2", map2, { actions: false, renderer: "svg" });
+vegaEmbed("#map2", map2, embedOptions);
 
 const chart6 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3402,7 +3410,7 @@ const chart6 = {
           type: "nominal",
           scale: {
             domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: ["#d64e2a", "#e8952e", "#c5b044"],
+            range: STATUS_RANGE_THREE,
           },
           legend: {
             orient: "top",
@@ -3418,7 +3426,7 @@ const chart6 = {
       mark: {
         type: "rule",
         strokeDash: [4, 3],
-        color: "#a09888",
+        color: TEXT3,
         opacity: 0.5,
       },
       encoding: { y: { datum: 100 } },
@@ -3431,7 +3439,7 @@ const chart6 = {
         dx: -4,
         dy: -6,
         fontSize: 11,
-        color: "#a09888",
+        color: TEXT3,
       },
       encoding: {
         x: { datum: 2022 },
@@ -3442,7 +3450,7 @@ const chart6 = {
   ],
   resolve: { scale: { y: "shared" } },
 };
-vegaEmbed("#chart6", chart6, { actions: false, renderer: "svg" });
+vegaEmbed("#chart6", chart6, embedOptions);
 
 const stateAbbrMap = {
   "Australian Capital Territory": "ACT",
@@ -3502,7 +3510,7 @@ const chart7 = {
       type: "nominal",
       scale: {
         domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-        range: ["#d64e2a", "#e8952e", "#c5b044"],
+        range: STATUS_RANGE_THREE,
       },
       legend: {
         orient: "top",
@@ -3519,12 +3527,13 @@ const chart7 = {
     ],
   },
 };
-vegaEmbed("#chart7", chart7, { actions: false, renderer: "svg" });
+vegaEmbed("#chart7", chart7, embedOptions);
 
 const chart8 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
   height: 380,
+  autosize: { type: "fit-x", contains: "padding" },
   config: baseConfig,
   data: { values: TOP_BIRDS },
   layer: [
@@ -3544,7 +3553,7 @@ const chart8 = {
           type: "nominal",
           scale: {
             domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: ["#d64e2a", "#e8952e", "#c5b044"],
+            range: STATUS_RANGE_THREE,
           },
         },
       },
@@ -3570,7 +3579,7 @@ const chart8 = {
           type: "nominal",
           scale: {
             domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: ["#d64e2a", "#e8952e", "#c5b044"],
+            range: STATUS_RANGE_THREE,
           },
           legend: { orient: "bottom-right", title: "EPBC Status" },
         },
@@ -3583,7 +3592,7 @@ const chart8 = {
     },
   ],
 };
-vegaEmbed("#chart8", chart8, { actions: false, renderer: "svg" });
+vegaEmbed("#chart8", chart8, embedOptions);
 
 const map3 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3599,8 +3608,8 @@ const map3 = {
       },
       mark: {
         type: "geoshape",
-        fill: "#1a1e2b",
-        stroke: "#3a3f55",
+        fill: BG3,
+        stroke: BORDER,
         strokeWidth: 1,
       },
     },
@@ -3620,7 +3629,7 @@ const map3 = {
           as: "pt_size",
         },
       ],
-      mark: { type: "circle", stroke: "#0f1117", strokeWidth: 0.5 },
+      mark: { type: "circle", stroke: BG, strokeWidth: 0.5 },
       encoding: {
         longitude: { field: "lon", type: "quantitative" },
         latitude: { field: "lat", type: "quantitative" },
@@ -3629,7 +3638,7 @@ const map3 = {
           type: "nominal",
           scale: {
             domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: ["#d64e2a", "#e8952e", "#c5b044"],
+            range: STATUS_RANGE_THREE,
           },
           legend: {
             orient: "bottom-left",
@@ -3657,7 +3666,7 @@ const map3 = {
     },
   ],
 };
-vegaEmbed("#map3", map3, { actions: false, renderer: "svg" });
+vegaEmbed("#map3", map3, embedOptions);
 
 const chart9 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3698,7 +3707,7 @@ const chart9 = {
       type: "nominal",
       scale: {
         domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-        range: ["#d64e2a", "#e8952e", "#c5b044"],
+        range: STATUS_RANGE_THREE,
       },
       legend: {
         orient: "bottom",
@@ -3719,7 +3728,7 @@ const chart9 = {
     ],
   },
 };
-vegaEmbed("#chart9", chart9, { actions: false, renderer: "svg" });
+vegaEmbed("#chart9", chart9, embedOptions);
 
 const PLANT_STATUS = [
   { status: "Critically Endangered", count: 306 },
@@ -3748,7 +3757,7 @@ const chart10 = {
         type: "arc",
         outerRadius: 132,
         innerRadius: 66,
-        stroke: "#0f1117",
+        stroke: BG,
         strokeWidth: 2,
       },
       encoding: {
@@ -3763,7 +3772,7 @@ const chart10 = {
               "Vulnerable",
               "Extinct",
             ],
-            range: ["#d64e2a", "#e8952e", "#c5b044", "#7c3aed"],
+            range: STATUS_RANGE,
           },
           legend: {
             orient: "bottom",
@@ -3785,59 +3794,21 @@ const chart10 = {
         fontSize: 26,
         fontWeight: 700,
         font: "Playfair Display, serif",
-        color: "#e8e4dc",
+        color: TEXT,
       },
       encoding: {
         text: { value: "1,514" },
       },
     },
     {
-      mark: { type: "text", fontSize: 12, dy: 20, color: "#a09888" },
+      mark: { type: "text", fontSize: 12, dy: 20, color: TEXT3 },
       encoding: {
         text: { value: "plant species" },
       },
     },
   ],
 };
-vegaEmbed("#chart10", chart10, { actions: false, renderer: "svg" });
-
-const chart11 = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  width: "container",
-  height: 240,
-  config: baseConfig,
-  data: { values: HABITAT },
-  mark: { type: "rect", cornerRadius: 4 },
-  encoding: {
-    x: {
-      field: "status",
-      type: "nominal",
-      title: null,
-      sort: ["Critically Endangered", "Endangered", "Vulnerable"],
-      axis: { labelAngle: -15, labelFontSize: 11 },
-    },
-    y: {
-      field: "habitat",
-      type: "nominal",
-      title: null,
-      sort: { field: "count", op: "sum", order: "descending" },
-      axis: { labelFontSize: 11 },
-    },
-    color: {
-      field: "count",
-      type: "quantitative",
-      title: "Species",
-      scale: { scheme: "orangered", domainMin: 0 },
-      legend: { orient: "right", titleFontSize: 11 },
-    },
-    tooltip: [
-      { field: "habitat", title: "Habitat" },
-      { field: "status", title: "Status" },
-      { field: "count", title: "Species" },
-    ],
-  },
-};
-vegaEmbed("#chart11", chart11, { actions: false, renderer: "svg" });
+vegaEmbed("#chart10", chart10, embedOptions);
 
 const chart12 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -3886,7 +3857,7 @@ const chart12 = {
             titleFontSize: 12,
           },
         },
-        color: { value: "#e8952e" },
+        color: { value: STATUS_COLORS.Endangered },
         tooltip: [
           { field: "state", title: "State" },
           { field: "total", title: "Total Threatened" },
@@ -3911,7 +3882,7 @@ const chart12 = {
     },
   ],
 };
-vegaEmbed("#chart12", chart12, { actions: false, renderer: "svg" });
+vegaEmbed("#chart12", chart12, embedOptions);
 
 const STATES_ORDER = ["ACT", "NSW", "QLD", "SA", "TAS", "VIC", "WA", "NT"];
 const chart13 = {
@@ -3962,7 +3933,7 @@ const chart13 = {
     color: {
       field: "shared",
       type: "quantitative",
-      scale: { scheme: "orangered" },
+      scale: { range: ["#283341", "#5e7380", STATUS_COLORS.Endangered] },
       legend: null,
     },
     tooltip: [
@@ -3972,7 +3943,7 @@ const chart13 = {
     ],
   },
 };
-vegaEmbed("#chart13", chart13, { actions: false, renderer: "svg" });
+vegaEmbed("#chart13", chart13, embedOptions);
 
 const MAMMAL_TREND = POP_TREND.filter((d) => d.group === "Mammals");
 const chart14 = {
@@ -3985,8 +3956,8 @@ const chart14 = {
     {
       mark: {
         type: "area",
-        line: { color: "#4b8a6e", strokeWidth: 2.5 },
-        color: "#4b8a6e",
+        line: { color: MAMMAL_COLOR, strokeWidth: 2.5 },
+        color: MAMMAL_COLOR,
         opacity: 0.2,
         interpolate: "monotone",
       },
@@ -4013,7 +3984,7 @@ const chart14 = {
       mark: {
         type: "point",
         filled: true,
-        color: "#4b8a6e",
+        color: MAMMAL_COLOR,
         size: 60,
         opacity: 0.9,
       },
@@ -4024,7 +3995,7 @@ const chart14 = {
     },
   ],
 };
-vegaEmbed("#chart14", chart14, { actions: false, renderer: "svg" });
+vegaEmbed("#chart14", chart14, embedOptions);
 
 const chart15 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -4056,7 +4027,7 @@ const chart15 = {
       type: "nominal",
       scale: {
         domain: ["Birds", "Mammals", "Amphibians"],
-        range: ["#e8952e", "#4b8a6e", "#7c3aed"],
+        range: [STATUS_COLORS.Endangered, MAMMAL_COLOR, STATUS_COLORS.Extinct],
       },
       legend: { orient: "top-right", title: null },
     },
@@ -4067,4 +4038,4 @@ const chart15 = {
     ],
   },
 };
-vegaEmbed("#chart15", chart15, { actions: false, renderer: "svg" });
+vegaEmbed("#chart15", chart15, embedOptions);

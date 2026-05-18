@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.24.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-tooltip@0.35.2"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -87,6 +88,9 @@
             Total species listed under the EPBC Act by threat category. Over 20%
             are Critically Endangered - one step from extinction.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 1 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart1"></div>
         </div>
 
@@ -99,6 +103,9 @@
             face proportionally higher rates of Critical Endangerment relative
             to their listed total.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 2 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart2"></div>
         </div>
       </div>
@@ -109,6 +116,9 @@
           Birds and mammals dominate threatened animal listings, but reptiles,
           fish, and frogs each face significant pressures. Hover to explore the
           breakdown.
+        </div>
+        <div class="chart-meta">
+          <span class="chart-label">Chart 3 of 14</span>
         </div>
         <div class="chart-wrap" id="chart3"></div>
       </div>
@@ -144,6 +154,9 @@
           A choropleth map of Australia showing total EPBC-listed threatened
           species per state. Darker shades indicate a higher species burden.
         </div>
+        <div class="chart-meta">
+          <span class="chart-label">Map 1 of 3</span>
+        </div>
         <div class="chart-wrap" id="map1"></div>
         <div class="insight-box">
           <strong>New South Wales</strong> leads with 760 threatened species,
@@ -163,6 +176,9 @@
             Each bar shows the composition of threatened listings across the
             four major threat categories for each state and territory.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 4 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart4"></div>
         </div>
 
@@ -174,6 +190,9 @@
             Species listed in only one state are particularly vulnerable to
             localised threats. Queensland and NSW have the highest number of
             these geographically isolated threatened species.
+          </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 5 of 14</span>
           </div>
           <div class="chart-wrap" id="chart5"></div>
         </div>
@@ -187,6 +206,9 @@
           Each point represents a wildlife monitoring location from the
           Australian Threatened Species Index. Colour indicates species threat
           status at that site. Hover for details.
+        </div>
+        <div class="chart-meta">
+          <span class="chart-label">Map 2 of 3</span>
         </div>
         <div class="chart-wrap" id="map2"></div>
         <div class="insight-box">
@@ -224,6 +246,9 @@
             bird species, split by EPBC threat category. A declining index
             suggests worsening population health.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 6 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart6"></div>
         </div>
 
@@ -235,6 +260,9 @@
             The number of distinct threatened bird species with active
             monitoring programs in each state and territory, by EPBC threat
             category.
+          </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 7 of 14</span>
           </div>
           <div class="chart-wrap" id="chart7"></div>
         </div>
@@ -249,6 +277,9 @@
           across Australia. A larger number of sites generally reflects greater
           conservation concern and research investment.
         </div>
+        <div class="chart-meta">
+          <span class="chart-label">Chart 8 of 14</span>
+        </div>
         <div class="chart-wrap" id="chart8"></div>
       </div>
 
@@ -260,6 +291,9 @@
           Click a threat status in the legend to highlight monitoring sites for
           that category. Critically Endangered monitoring sites are concentrated
           in Victoria, NSW, and coastal WA.
+        </div>
+        <div class="chart-meta">
+          <span class="chart-label">Map 3 of 3</span>
         </div>
         <div class="chart-wrap" id="map3"></div>
       </div>
@@ -288,6 +322,9 @@
             threatened species, broken down by Critically Endangered,
             Endangered, and Vulnerable categories.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 9 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart9"></div>
         </div>
 
@@ -298,20 +335,13 @@
             status. More than 20% are Critically Endangered - facing the most
             immediate risk of extinction.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 10 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart10"></div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Habitat Types and Threat Severity</div>
-        <div class="card-desc">
-          A heatmap showing the number of monitored threatened species by
-          habitat type and EPBC threat category. Terrestrial and arboreal
-          habitats dominate, but coastal and wetland species face particularly
-          acute risks relative to their small numbers.
-        </div>
-        <div class="chart-wrap" id="chart11"></div>
-      </div>
     </section>
 
     <!-- Section 5 -->
@@ -339,6 +369,9 @@
             state - size reflects the percentage of species found only in that
             state.
           </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 11 of 14</span>
+          </div>
           <div class="chart-wrap" id="chart12"></div>
         </div>
 
@@ -350,6 +383,9 @@
             A dot matrix showing how many threatened species are shared between
             pairs of Australian states. High overlap suggests interconnected
             threats requiring coordinated conservation.
+          </div>
+          <div class="chart-meta">
+            <span class="chart-label">Chart 12 of 14</span>
           </div>
           <div class="chart-wrap" id="chart13"></div>
         </div>
@@ -365,6 +401,9 @@
           but shows a deeply worrying downward trajectory, particularly since
           2010.
         </div>
+        <div class="chart-meta">
+          <span class="chart-label">Chart 13 of 14</span>
+        </div>
         <div class="chart-wrap" id="chart14"></div>
       </div>
 
@@ -378,6 +417,9 @@
           index trending below their 1990 baseline, with Amphibians showing the
           steepest and most erratic decline - driven by the chytrid fungus
           pandemic.
+        </div>
+        <div class="chart-meta">
+          <span class="chart-label">Chart 14 of 14</span>
         </div>
         <div class="chart-wrap" id="chart15"></div>
       </div>
