@@ -5,23 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Australia's Threatened Species - A Crisis in the Wild</title>
 
-    <!-- Chart libraries -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.24.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-tooltip@0.35.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Hero -->
     <section class="hero">
       <div class="hero-eyebrow">Australia's Biodiversity Crisis · 2026</div>
       <h1>A Nation's Wildlife <em>On the Edge</em></h1>
@@ -52,7 +50,6 @@
       </div>
     </section>
 
-    <!-- Section 1 -->
     <section class="section section--dark">
       <div class="section-label">Section 01 - The Big Picture</div>
       <h2 class="section-title">
@@ -133,7 +130,6 @@
       </div>
     </section>
 
-    <!-- Section 2 -->
     <section class="section">
       <div class="section-label">Section 02 - Geography of Crisis</div>
       <h2 class="section-title">Where Australia's threatened species live</h2>
@@ -200,28 +196,26 @@
 
       <div class="card" style="margin-bottom: 2rem">
         <div class="card-title">
-          Map 2 - Wildlife Monitoring Sites Across Australia
+          Map 2 - Endemic Threatened Species by State
         </div>
         <div class="card-desc">
-          Each point represents a wildlife monitoring location from the
-          Australian Threatened Species Index. Colour indicates species threat
-          status at that site. Hover for details.
+          Number of threatened species endemic to each state or territory —
+          species found nowhere else in Australia. Darker shading indicates
+          higher endemism. Hover for details.
         </div>
         <div class="chart-meta">
           <span class="chart-label">Map 2 of 3</span>
         </div>
         <div class="chart-wrap" id="map2"></div>
         <div class="insight-box">
-          Monitoring sites are densely clustered along the eastern and
-          south-western coastlines - reflecting both biodiversity hotspots and
-          the concentration of human research infrastructure. Remote inland
-          areas, where many species also live, are comparatively
-          under-monitored.
+          Queensland leads with 91 endemic threatened species, followed by NSW
+          (66) and WA (69). Tasmania has the highest proportion of endemic
+          threatened species relative to its total count, highlighting it as a
+          critical biodiversity refuge despite its small size.
         </div>
       </div>
     </section>
 
-    <!-- Section 3 -->
     <section class="section section--darker">
       <div class="section-label">Section 03 - Birds in Crisis</div>
       <h2 class="section-title">
@@ -299,7 +293,6 @@
       </div>
     </section>
 
-    <!-- Section 4 -->
     <section class="section section--dark">
       <div class="section-label">Section 04 - Plants &amp; Families</div>
       <h2 class="section-title">
@@ -341,10 +334,8 @@
           <div class="chart-wrap" id="chart10"></div>
         </div>
       </div>
-
     </section>
 
-    <!-- Section 5 -->
     <section class="section">
       <div class="section-label">Section 05 - Looking Forward</div>
       <h2 class="section-title">
@@ -361,13 +352,13 @@
       <div class="grid-2" style="margin-bottom: 2rem">
         <div class="card">
           <div class="card-title">
-            Species Richness vs. Endemic Vulnerability by State
+            Endemic vs Total Threatened Species per State
           </div>
           <div class="card-desc">
-            States with more total threatened species also tend to have more
-            geographically isolated (single-state) species. Each point is a
-            state - size reflects the percentage of species found only in that
-            state.
+            Dumbbell chart comparing total threatened species (red dot) against
+            endemic threatened species (orange dot) per state. The gap between
+            dots reveals how many species are shared with other states — wider
+            gaps indicate greater cross-border conservation need.
           </div>
           <div class="chart-meta">
             <span class="chart-label">Chart 11 of 14</span>
@@ -376,13 +367,13 @@
         </div>
 
         <div class="card">
-          <div class="card-title">
-            Shared Threatened Species Between State Pairs
-          </div>
+          <div class="card-title">Shared Threatened Species Between States</div>
           <div class="card-desc">
-            A dot matrix showing how many threatened species are shared between
-            pairs of Australian states. High overlap suggests interconnected
-            threats requiring coordinated conservation.
+            Chord diagram showing interstate ecological overlap. Ribbon
+            thickness represents shared threatened species between each pair of
+            states. Hover a ribbon to see exact counts; hover a state arc to
+            highlight all its connections. NSW–QLD (224) and NSW–VIC (202)
+            dominate.
           </div>
           <div class="chart-meta">
             <span class="chart-label">Chart 12 of 14</span>
@@ -440,9 +431,10 @@
           <h4>Data Sources</h4>
           <p>
             <strong>Dataset 1:</strong> Australian Threatened Species Index
-            (2025). Terrestrial Ecosystem Research Network (TERN) &amp; NESP
-            Threatened Species Recovery Hub, The University of Queensland.
-            <a href="https://www.tern.org.au" target="_blank"
+            (2025). Terrestrial Ecosystem Research Network (TERN).
+            <a
+              href="https://tsx.org.au/tsx2025/?type=all&tgroup=All&group=All&subgroup=All&state=All&statusauth=Max&status=NT_VU_EN_CR&management=All&refyear=1985"
+              target="_blank"
               >www.tern.org.au</a
             >
           </p>
@@ -450,15 +442,15 @@
             <strong>Dataset 2:</strong> Threatened Species (EPBC Act listed),
             Department of Climate Change, Energy, the Environment and Water,
             Australian Government.
-            <a href="https://www.environment.gov.au/sprat" target="_blank"
-              >environment.gov.au</a
+            <a href="https://data.gov.au/data/dataset/threatened-species-state-lists" target="_blank"
+              >data.gov.au</a
             >
-            - extracted February 2026.
+            - extracted May 2026.
           </p>
           <p style="margin-top: 0.6rem">
             <strong>Map geometry:</strong> Australia state boundaries - ABS ASGS
             Edition 3 (2021), converted to TopoJSON via Mapshaper.
-            <a href="https://www.abs.gov.au" target="_blank">abs.gov.au</a>
+            <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files" target="_blank">abs.gov.au</a>
           </p>
         </div>
         <div>
@@ -481,6 +473,6 @@
       </div>
     </footer>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

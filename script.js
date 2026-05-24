@@ -1,4 +1,4 @@
-// Shared chart colors and theme
+// Theme
 const STATUS_COLORS = {
   "Critically Endangered": "#d1495b",
   Endangered: "#f08c2e",
@@ -54,17 +54,17 @@ const baseConfig = {
     domainColor: BORDER,
     domainWidth: 1,
     gridColor: GRID,
-    gridOpacity: 0.18,
+    gridOpacity: 0.22,
     tickColor: BORDER,
     labelColor: TEXT2,
     titleColor: TEXT2,
     labelFont: "Source Sans 3, sans-serif",
     titleFont: "Source Sans 3, sans-serif",
-    labelFontSize: 11,
-    titleFontSize: 12,
+    labelFontSize: 13,
+    titleFontSize: 14,
     titleFontWeight: 600,
-    labelPadding: 6,
-    titlePadding: 10,
+    labelPadding: 8,
+    titlePadding: 12,
     tickSize: 5,
     labelLimit: 240,
   },
@@ -73,8 +73,8 @@ const baseConfig = {
     titleColor: TEXT,
     labelFont: "Source Sans 3, sans-serif",
     titleFont: "Source Sans 3, sans-serif",
-    labelFontSize: 11,
-    titleFontSize: 11,
+    labelFontSize: 13,
+    titleFontSize: 12,
     titleFontWeight: 600,
     labelLimit: 220,
     symbolStrokeColor: BG,
@@ -83,7 +83,7 @@ const baseConfig = {
   title: {
     color: TEXT,
     font: "Playfair Display, serif",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: 700,
   },
 };
@@ -2958,19 +2958,31 @@ const MONITORING_LOCATIONS = MONITORING_LOCATIONS_RAW.filter(
 
 const W = (id) => document.getElementById(id).clientWidth - 20 || 700;
 
+const STATE_FULL_NAMES = {
+  ACT: "Australian Capital Territory",
+  NSW: "New South Wales",
+  NT: "Northern Territory",
+  QLD: "Queensland",
+  SA: "South Australia",
+  TAS: "Tasmania",
+  VIC: "Victoria",
+  WA: "Western Australia",
+};
+
+const STATE_STATUS_LABELED = STATE_STATUS.map((d) => ({
+  ...d,
+  state_full: STATE_FULL_NAMES[d.state],
+}));
+
 // Charts
 const chart1 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 320,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
   config: {
     ...baseConfig,
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
+    legend: { ...baseConfig.legend, symbolSize: 140 },
   },
   data: { values: STATUS_SUMMARY },
   transform: [
@@ -2979,40 +2991,67 @@ const chart1 = {
         "datum['Threatened status'] !== 'Extinct in the wild' && datum['Threatened status'] !== 'Conservation Dependent'",
     },
   ],
-  encoding: {
-    theta: { field: "count", type: "quantitative", stack: true },
-    color: {
-      field: "Threatened status",
-      type: "nominal",
-      scale: {
-        domain: [
-          "Critically Endangered",
-          "Endangered",
-          "Vulnerable",
-          "Extinct",
-        ],
-        range: STATUS_RANGE,
+  layer: [
+    {
+      params: [
+        {
+          name: "statusSel1",
+          select: { type: "point", fields: ["Threatened status"] },
+          bind: "legend",
+        },
+      ],
+      mark: {
+        type: "arc",
+        outerRadius: 128,
+        innerRadius: 62,
+        stroke: BG,
+        strokeWidth: 2,
       },
-      legend: {
-        orient: "bottom",
-        anchor: "middle",
-        direction: "horizontal",
-        columns: 4,
-        title: null,
+      encoding: {
+        theta: { field: "count", type: "quantitative", stack: true },
+        color: {
+          field: "Threatened status",
+          type: "nominal",
+          scale: {
+            domain: [
+              "Critically Endangered",
+              "Endangered",
+              "Vulnerable",
+              "Extinct",
+            ],
+            range: STATUS_RANGE,
+          },
+          legend: {
+            orient: "bottom",
+            anchor: "middle",
+            direction: "horizontal",
+            columnPadding: 20,
+            title: "Click to filter",
+            titleFontSize: 10,
+          },
+        },
+        opacity: { condition: { param: "statusSel1", value: 1 }, value: 0.15 },
+        tooltip: [
+          { field: "Threatened status", title: "Status" },
+          { field: "count", title: "Species", format: "," },
+        ],
       },
     },
-    tooltip: [
-      { field: "Threatened status", title: "Status" },
-      { field: "count", title: "Species", format: "," },
-    ],
-  },
-  mark: {
-    type: "arc",
-    outerRadius: 128,
-    innerRadius: 62,
-    stroke: BG,
-    strokeWidth: 2,
-  },
+    {
+      mark: {
+        type: "text",
+        fontSize: 26,
+        fontWeight: 700,
+        font: "Playfair Display, serif",
+        color: TEXT,
+      },
+      encoding: { text: { value: "2,200" } },
+    },
+    {
+      mark: { type: "text", fontSize: 12, dy: 20, color: TEXT3 },
+      encoding: { text: { value: "threatened species" } },
+    },
+  ],
 };
 
 vegaEmbed("#chart1", chart1, embedOptions);
@@ -3020,20 +3059,11 @@ vegaEmbed("#chart1", chart1, embedOptions);
 const chart2 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 260,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
   config: {
     ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
+    legend: { ...baseConfig.legend, symbolSize: 140 },
   },
   data: {
     values: KINGDOM_STATUS.filter((d) =>
@@ -3042,6 +3072,13 @@ const chart2 = {
       ),
     ),
   },
+  params: [
+    {
+      name: "statusSel2",
+      select: { type: "point", fields: ["Threatened status"] },
+      bind: "legend",
+    },
+  ],
   mark: { type: "bar", cornerRadiusTopLeft: 2, cornerRadiusTopRight: 2 },
   encoding: {
     x: {
@@ -3077,10 +3114,12 @@ const chart2 = {
         orient: "bottom",
         anchor: "middle",
         direction: "horizontal",
-        columns: 4,
-        title: null,
+        columnPadding: 20,
+        title: "Click to filter",
+        titleFontSize: 10,
       },
     },
+    opacity: { condition: { param: "statusSel2", value: 1 }, value: 0.15 },
     tooltip: [
       { field: "Kingdom", title: "Kingdom" },
       { field: "Threatened status", title: "Status" },
@@ -3093,9 +3132,16 @@ vegaEmbed("#chart2", chart2, embedOptions);
 const chart3 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 280,
+  height: 300,
   config: baseConfig,
   data: { values: ANIMAL_CLASS },
+  params: [
+    {
+      name: "statusSel3",
+      select: { type: "point", fields: ["Threatened status"] },
+      bind: "legend",
+    },
+  ],
   mark: { type: "bar", cornerRadius: 2 },
   encoding: {
     y: {
@@ -3103,7 +3149,6 @@ const chart3 = {
       type: "nominal",
       title: null,
       sort: { field: "count", op: "sum", order: "descending" },
-      axis: { labelFontSize: 12 },
     },
     x: {
       field: "count",
@@ -3123,8 +3168,16 @@ const chart3 = {
         ],
         range: STATUS_RANGE,
       },
-      legend: { orient: "top", title: null, direction: "horizontal" },
+      legend: {
+        orient: "bottom",
+        anchor: "middle",
+        direction: "horizontal",
+        columnPadding: 20,
+        title: "Click to filter",
+        titleFontSize: 10,
+      },
     },
+    opacity: { condition: { param: "statusSel3", value: 1 }, value: 0.15 },
     order: {
       field: "Threatened status",
       sort: ["Critically Endangered", "Endangered", "Vulnerable", "Extinct"],
@@ -3141,7 +3194,7 @@ vegaEmbed("#chart3", chart3, embedOptions);
 const map1 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 420,
+  height: 440,
   config: baseConfig,
   projection: { type: "mercator", center: [133, -28], scale: 650 },
   data: {
@@ -3181,22 +3234,20 @@ vegaEmbed("#map1", map1, embedOptions);
 const chart4 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 340,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
   config: {
     ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
+    legend: { ...baseConfig.legend, symbolSize: 140 },
   },
-  data: { values: STATE_STATUS },
+  data: { values: STATE_STATUS_LABELED },
+  params: [
+    {
+      name: "statusSel4",
+      select: { type: "point", fields: ["status"] },
+      bind: "legend",
+    },
+  ],
   mark: { type: "bar", cornerRadius: 2 },
   encoding: {
     x: {
@@ -3227,16 +3278,18 @@ const chart4 = {
         orient: "bottom",
         anchor: "middle",
         direction: "horizontal",
-        columns: 4,
-        title: null,
+        columnPadding: 20,
+        title: "Click to filter",
+        titleFontSize: 10,
       },
     },
+    opacity: { condition: { param: "statusSel4", value: 1 }, value: 0.15 },
     order: {
       field: "status",
       sort: ["Critically Endangered", "Endangered", "Vulnerable", "Extinct"],
     },
     tooltip: [
-      { field: "state", title: "State" },
+      { field: "state_full", title: "State" },
       { field: "status", title: "Status" },
       { field: "count", title: "Species", format: "," },
     ],
@@ -3247,32 +3300,26 @@ vegaEmbed("#chart4", chart4, embedOptions);
 const chart5 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 340,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
-  config: {
-    ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-  },
+  config: baseConfig,
   data: { values: ENDEMIC_STATE.filter((d) => d.endemic_threatened > 0) },
+  transform: [{ calculate: "0", as: "zero" }],
   layer: [
     {
-      mark: { type: "rule", color: GRID, strokeWidth: 1 },
+      mark: { type: "rule", color: TEXT3, strokeWidth: 1.5 },
       encoding: {
         y: {
           field: "state",
           type: "nominal",
           sort: { field: "endemic_threatened", order: "descending" },
         },
-        x: { value: 0 },
+        x: { field: "zero", type: "quantitative" },
         x2: { field: "endemic_threatened", type: "quantitative" },
       },
     },
     {
-      mark: { type: "point", filled: true, size: 140 },
+      mark: { type: "point", filled: true, size: 120 },
       encoding: {
         y: {
           field: "state",
@@ -3303,89 +3350,63 @@ const map2 = {
   height: 440,
   config: baseConfig,
   projection: { type: "mercator", center: [133, -28], scale: 650 },
-  layer: [
+  data: {
+    url: "https://raw.githubusercontent.com/SohamDarekar/fit3179-assignment2/refs/heads/main/australia-states.json",
+    format: { type: "topojson", feature: "STE_2021_AUST_GDA2020" },
+  },
+  transform: [
     {
-      data: {
-        url: "https://raw.githubusercontent.com/SohamDarekar/fit3179-assignment2/refs/heads/main/australia-states.json",
-        format: { type: "topojson", feature: "STE_2021_AUST_GDA2020" },
-      },
-      mark: {
-        type: "geoshape",
-        fill: BG3,
-        stroke: BORDER,
-        strokeWidth: 1,
-      },
-    },
-    {
-      data: { values: MONITORING_LOCATIONS },
-      transform: [
-        {
-          calculate:
-            "datum.status === 'Critically Endangered' ? 80 : datum.status === 'Endangered' ? 50 : 30",
-          as: "pt_size",
-        },
-      ],
-      mark: {
-        type: "circle",
-        opacity: 0.7,
-        stroke: BG,
-        strokeWidth: 0.5,
-      },
-      encoding: {
-        longitude: { field: "lon", type: "quantitative" },
-        latitude: { field: "lat", type: "quantitative" },
-        color: {
-          field: "status",
-          type: "nominal",
-          scale: {
-            domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: STATUS_RANGE_THREE,
-          },
-          legend: {
-            orient: "bottom-left",
-            title: "Threat Status",
-            symbolSize: 80,
-          },
-        },
-        size: {
-          field: "pt_size",
-          type: "quantitative",
-          legend: null,
-          scale: { range: [30, 80] },
-        },
-        tooltip: [
-          { field: "common_name", title: "Species" },
-          { field: "status", title: "Threat Status" },
-          { field: "state", title: "State" },
-          { field: "group", title: "Group" },
-        ],
+      lookup: "properties.STE_NAME21",
+      from: {
+        data: { values: ENDEMIC_STATE },
+        key: "state_full",
+        fields: ["endemic_threatened", "state"],
       },
     },
   ],
+  mark: { type: "geoshape", stroke: BG, strokeWidth: 1.5 },
+  encoding: {
+    color: {
+      field: "endemic_threatened",
+      type: "quantitative",
+      title: "Endemic Threatened Species",
+      scale: {
+        range: ["#e0f0e8", "#6dbf82", "#2d8e50", "#1a5c2e"],
+        domainMin: 0,
+      },
+      legend: { orient: "bottom-right", titleFontSize: 11 },
+    },
+    tooltip: [
+      { field: "properties.STE_NAME21", title: "State" },
+      {
+        field: "endemic_threatened",
+        title: "Endemic Threatened Species",
+        format: ",",
+      },
+    ],
+  },
 };
 vegaEmbed("#map2", map2, embedOptions);
 
 const chart6 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 320,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
   config: {
     ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
+    legend: { ...baseConfig.legend, symbolSize: 140 },
   },
   data: { values: BIRD_TREND },
   layer: [
     {
+      params: [
+        {
+          name: "statusSel6",
+          select: { type: "point", fields: ["group"] },
+          bind: "legend",
+        },
+      ],
       mark: {
         type: "line",
         point: false,
@@ -3413,13 +3434,15 @@ const chart6 = {
             range: STATUS_RANGE_THREE,
           },
           legend: {
-            orient: "top",
+            orient: "bottom",
             anchor: "middle",
             direction: "horizontal",
-            columns: 3,
-            title: null,
+            columnPadding: 20,
+            title: "Click to filter",
+            titleFontSize: 10,
           },
         },
+        opacity: { condition: { param: "statusSel6", value: 1 }, value: 0.08 },
       },
     },
     {
@@ -3470,22 +3493,20 @@ const BIRDS_STATE_ABBR = BIRDS_STATE.map((d) => ({
 const chart7 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 320,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
   config: {
     ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
+    legend: { ...baseConfig.legend, symbolSize: 140 },
   },
   data: { values: BIRDS_STATE_ABBR },
+  params: [
+    {
+      name: "statusSel7",
+      select: { type: "point", fields: ["EPBCStatus"] },
+      bind: "legend",
+    },
+  ],
   mark: { type: "bar", cornerRadiusTopLeft: 2, cornerRadiusTopRight: 2 },
   encoding: {
     x: {
@@ -3513,13 +3534,15 @@ const chart7 = {
         range: STATUS_RANGE_THREE,
       },
       legend: {
-        orient: "top",
+        orient: "bottom",
         anchor: "middle",
         direction: "horizontal",
-        columns: 3,
-        title: null,
+        columnPadding: 20,
+        title: "Click to filter",
+        titleFontSize: 10,
       },
     },
+    opacity: { condition: { param: "statusSel7", value: 1 }, value: 0.15 },
     tooltip: [
       { field: "State", title: "State" },
       { field: "EPBCStatus", title: "Status" },
@@ -3532,72 +3555,65 @@ vegaEmbed("#chart7", chart7, embedOptions);
 const chart8 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 380,
+  height: 420,
   autosize: { type: "fit-x", contains: "padding" },
-  config: baseConfig,
+  config: {
+    ...baseConfig,
+    legend: { ...baseConfig.legend, symbolSize: 120 },
+  },
   data: { values: TOP_BIRDS },
-  layer: [
+  params: [
     {
-      mark: { type: "rule", strokeWidth: 1.5, opacity: 0.5 },
-      encoding: {
-        y: {
-          field: "CommonName",
-          type: "nominal",
-          sort: { field: "sites", order: "descending" },
-          title: null,
-        },
-        x: { datum: 0 },
-        x2: { field: "sites" },
-        color: {
-          field: "status",
-          type: "nominal",
-          scale: {
-            domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: STATUS_RANGE_THREE,
-          },
-        },
-      },
-    },
-    {
-      mark: { type: "point", filled: true, size: 100 },
-      encoding: {
-        y: {
-          field: "CommonName",
-          type: "nominal",
-          sort: { field: "sites", order: "descending" },
-          title: null,
-          axis: { labelFontSize: 11 },
-        },
-        x: {
-          field: "sites",
-          type: "quantitative",
-          title: "Monitoring Sites",
-          axis: { grid: true, gridColor: GRID },
-        },
-        color: {
-          field: "status",
-          type: "nominal",
-          scale: {
-            domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-            range: STATUS_RANGE_THREE,
-          },
-          legend: { orient: "bottom-right", title: "EPBC Status" },
-        },
-        tooltip: [
-          { field: "CommonName", title: "Species" },
-          { field: "status", title: "Status" },
-          { field: "sites", title: "Monitoring Sites" },
-        ],
-      },
+      name: "statusSel8",
+      select: { type: "point", fields: ["status"] },
+      bind: "legend",
     },
   ],
+  mark: { type: "bar", cornerRadiusTopRight: 2, cornerRadiusBottomRight: 2 },
+  encoding: {
+    y: {
+      field: "CommonName",
+      type: "nominal",
+      sort: { field: "sites", order: "descending" },
+      title: null,
+      axis: { labelLimit: 260 },
+    },
+    x: {
+      field: "sites",
+      type: "quantitative",
+      title: "Monitoring Sites",
+      axis: { grid: true, gridColor: GRID },
+    },
+    color: {
+      field: "status",
+      type: "nominal",
+      scale: {
+        domain: ["Critically Endangered", "Endangered", "Vulnerable"],
+        range: STATUS_RANGE_THREE,
+      },
+      legend: {
+        orient: "bottom",
+        anchor: "middle",
+        direction: "horizontal",
+        columnPadding: 20,
+        title: "Click to filter",
+        titleFontSize: 10,
+      },
+    },
+    opacity: { condition: { param: "statusSel8", value: 1 }, value: 0.15 },
+    tooltip: [
+      { field: "CommonName", title: "Species" },
+      { field: "status", title: "Status" },
+      { field: "sites", title: "Monitoring Sites" },
+    ],
+  },
 };
 vegaEmbed("#chart8", chart8, embedOptions);
 
 const map3 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 420,
+  height: 440,
   config: baseConfig,
   projection: { type: "mercator", center: [133, -28], scale: 650 },
   layer: [
@@ -3642,19 +3658,19 @@ const map3 = {
           },
           legend: {
             orient: "bottom-left",
-            title: "Click to filter by status",
+            title: "Click to filter",
             titleFontSize: 10,
           },
         },
         opacity: {
-          condition: { param: "statusSel", value: 0.85 },
-          value: 0.1,
+          condition: { param: "statusSel", value: 0.55 },
+          value: 0.07,
         },
         size: {
           field: "pt_size",
           type: "quantitative",
           legend: null,
-          scale: { range: [32, 100] },
+          scale: { range: [16, 55] },
         },
         tooltip: [
           { field: "common_name", title: "Species" },
@@ -3671,62 +3687,54 @@ vegaEmbed("#map3", map3, embedOptions);
 const chart9 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 360,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
-  config: {
-    ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
-  },
+  config: baseConfig,
   data: { values: TOP_FAM },
-  mark: { type: "bar", cornerRadius: 2 },
-  encoding: {
-    y: {
-      field: "family",
-      type: "nominal",
-      title: null,
-      sort: { field: "count", op: "sum", order: "descending" },
-      axis: { labelFontSize: 11, labelFont: "Source Sans 3, sans-serif" },
+  transform: [
+    {
+      aggregate: [{ op: "sum", field: "count", as: "total" }],
+      groupby: ["family"],
     },
-    x: {
-      field: "count",
-      type: "quantitative",
-      title: "Species Count",
-      axis: { grid: true, gridColor: GRID },
-    },
-    color: {
-      field: "status",
-      type: "nominal",
-      scale: {
-        domain: ["Critically Endangered", "Endangered", "Vulnerable"],
-        range: STATUS_RANGE_THREE,
-      },
-      legend: {
-        orient: "bottom",
-        anchor: "middle",
-        direction: "horizontal",
-        columns: 3,
-        title: null,
+    { calculate: "0", as: "zero" },
+  ],
+  layer: [
+    {
+      mark: { type: "rule", strokeWidth: 2, color: TEXT3, opacity: 0.7 },
+      encoding: {
+        y: {
+          field: "family",
+          type: "nominal",
+          sort: { field: "total", order: "descending" },
+          title: null,
+        },
+        x: { field: "zero", type: "quantitative" },
+        x2: { field: "total" },
       },
     },
-    order: {
-      field: "status",
-      sort: ["Critically Endangered", "Endangered", "Vulnerable"],
+    {
+      mark: { type: "point", filled: true, size: 120 },
+      encoding: {
+        y: {
+          field: "family",
+          type: "nominal",
+          sort: { field: "total", order: "descending" },
+          title: null,
+        },
+        x: {
+          field: "total",
+          type: "quantitative",
+          title: "Species Count",
+          axis: { grid: true, gridColor: GRID },
+        },
+        color: { value: STATUS_COLORS["Endangered"] },
+        tooltip: [
+          { field: "family", title: "Family" },
+          { field: "total", title: "Total Threatened Species" },
+        ],
+      },
     },
-    tooltip: [
-      { field: "family", title: "Family" },
-      { field: "status", title: "Status" },
-      { field: "count", title: "Species" },
-    ],
-  },
+  ],
 };
 vegaEmbed("#chart9", chart9, embedOptions);
 
@@ -3740,19 +3748,22 @@ const PLANT_STATUS = [
 const chart10 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 340,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
   config: {
     ...baseConfig,
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
+    legend: { ...baseConfig.legend, symbolSize: 140 },
   },
   data: { values: PLANT_STATUS },
   layer: [
     {
+      params: [
+        {
+          name: "statusSel10",
+          select: { type: "point", fields: ["status"] },
+          bind: "legend",
+        },
+      ],
       mark: {
         type: "arc",
         outerRadius: 132,
@@ -3778,10 +3789,12 @@ const chart10 = {
             orient: "bottom",
             anchor: "middle",
             direction: "horizontal",
-            columns: 4,
-            title: null,
+            columnPadding: 20,
+            title: "Click to filter",
+            titleFontSize: 10,
           },
         },
+        opacity: { condition: { param: "statusSel10", value: 1 }, value: 0.15 },
         tooltip: [
           { field: "status", title: "Status" },
           { field: "count", title: "Plant Species", format: "," },
@@ -3810,146 +3823,269 @@ const chart10 = {
 };
 vegaEmbed("#chart10", chart10, embedOptions);
 
+const HOTSPOT_NO_ACT = HOTSPOT.filter((d) => d.state !== "ACT").map((d) => ({
+  ...d,
+  state_full: STATE_FULL_NAMES[d.state],
+}));
+const DUMBBELL_STATE_ORDER = HOTSPOT_NO_ACT.slice()
+  .sort((a, b) => b.total - a.total)
+  .map((d) => d.state);
+const HOTSPOT_DUMBBELL = HOTSPOT_NO_ACT.flatMap((d) => [
+  {
+    state: d.state,
+    state_full: d.state_full,
+    metric: "Total Threatened",
+    value: d.total,
+    total: d.total,
+    endemic: d.endemic,
+    pct_endemic: d.pct_endemic,
+  },
+  {
+    state: d.state,
+    state_full: d.state_full,
+    metric: "Endemic Threatened",
+    value: d.endemic,
+    total: d.total,
+    endemic: d.endemic,
+    pct_endemic: d.pct_endemic,
+  },
+]);
+
 const chart12 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 340,
+  height: 300,
   autosize: { type: "fit-x", contains: "padding" },
-  config: {
-    ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
-  },
-  data: { values: HOTSPOT.filter((d) => d.state !== "ACT") },
+  config: baseConfig,
   layer: [
     {
-      mark: { type: "circle", opacity: 0.85 },
+      data: { values: HOTSPOT_NO_ACT },
+      mark: { type: "rule", strokeWidth: 2, color: TEXT3, opacity: 0.5 },
       encoding: {
-        x: {
-          field: "total",
-          type: "quantitative",
-          title: "Total Threatened Species",
-          axis: { grid: true, gridColor: GRID },
-        },
         y: {
-          field: "endemic",
+          field: "state",
+          type: "nominal",
+          sort: DUMBBELL_STATE_ORDER,
+          title: null,
+        },
+        x: { field: "endemic", type: "quantitative" },
+        x2: { field: "total" },
+      },
+    },
+    {
+      data: { values: HOTSPOT_DUMBBELL },
+      params: [
+        {
+          name: "metricSel12",
+          select: { type: "point", fields: ["metric"] },
+          bind: "legend",
+        },
+      ],
+      mark: { type: "point", filled: true, size: 120 },
+      encoding: {
+        y: {
+          field: "state",
+          type: "nominal",
+          sort: DUMBBELL_STATE_ORDER,
+          title: null,
+        },
+        x: {
+          field: "value",
           type: "quantitative",
-          title: "Single-State Endemics",
+          title: "Species Count",
           axis: { grid: true, gridColor: GRID },
         },
-        size: {
-          field: "pct_endemic",
-          type: "quantitative",
-          title: "% Endemic",
-          scale: { range: [60, 500] },
+        color: {
+          field: "metric",
+          type: "nominal",
+          scale: {
+            domain: ["Total Threatened", "Endemic Threatened"],
+            range: [
+              STATUS_COLORS["Critically Endangered"],
+              STATUS_COLORS.Endangered,
+            ],
+          },
           legend: {
             orient: "bottom",
             anchor: "middle",
             direction: "horizontal",
-            titleFontSize: 12,
+            columnPadding: 20,
+            title: "Click to filter",
+            titleFontSize: 10,
           },
         },
-        color: { value: STATUS_COLORS.Endangered },
+        opacity: { condition: { param: "metricSel12", value: 1 }, value: 0.12 },
         tooltip: [
-          { field: "state", title: "State" },
+          { field: "state_full", title: "State" },
           { field: "total", title: "Total Threatened" },
-          { field: "endemic", title: "Single-State Endemics" },
+          { field: "endemic", title: "Endemic Threatened" },
           { field: "pct_endemic", title: "% Endemic", format: ".1f" },
         ],
-      },
-    },
-    {
-      mark: {
-        type: "text",
-        dy: -14,
-        fontSize: 12,
-        color: TEXT,
-        fontWeight: 600,
-      },
-      encoding: {
-        x: { field: "total", type: "quantitative" },
-        y: { field: "endemic", type: "quantitative" },
-        text: { field: "state" },
       },
     },
   ],
 };
 vegaEmbed("#chart12", chart12, embedOptions);
 
-const STATES_ORDER = ["ACT", "NSW", "QLD", "SA", "TAS", "VIC", "WA", "NT"];
-const chart13 = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  width: "container",
-  height: 300,
-  autosize: { type: "fit-x", contains: "padding" },
-  config: {
-    ...baseConfig,
-    axis: {
-      ...baseConfig.axis,
-      labelFontSize: 12,
-      titleFontSize: 13,
-    },
-    legend: {
-      ...baseConfig.legend,
-      labelFontSize: 13,
-      symbolSize: 140,
-    },
-  },
-  data: { values: CO_OCCUR },
-  mark: { type: "circle" },
-  encoding: {
-    x: {
-      field: "state1",
-      type: "nominal",
-      sort: STATES_ORDER,
-      title: null,
-      axis: { labelAngle: -30 },
-    },
-    y: {
-      field: "state2",
-      type: "nominal",
-      sort: STATES_ORDER,
-      title: null,
-    },
-    size: {
-      field: "shared",
-      type: "quantitative",
-      scale: { range: [20, 1200] },
-      title: "Shared species",
-      legend: {
-        orient: "right",
-        titleFontSize: 12,
-        labelFontSize: 12,
-      },
-    },
-    color: {
-      field: "shared",
-      type: "quantitative",
-      scale: { range: ["#283341", "#5e7380", STATUS_COLORS.Endangered] },
-      legend: null,
-    },
-    tooltip: [
-      { field: "state1", title: "State A" },
-      { field: "state2", title: "State B" },
-      { field: "shared", title: "Shared Species", format: "," },
-    ],
-  },
-};
-vegaEmbed("#chart13", chart13, embedOptions);
+function renderChordDiagram() {
+  const CHORD_STATES = ["NSW", "QLD", "WA", "VIC", "SA", "TAS", "NT", "ACT"];
+  const CHORD_FULL = {
+    NSW: "New South Wales",
+    QLD: "Queensland",
+    WA: "Western Australia",
+    VIC: "Victoria",
+    SA: "South Australia",
+    TAS: "Tasmania",
+    NT: "Northern Territory",
+    ACT: "Australian Capital Territory",
+  };
+  const n = CHORD_STATES.length;
+
+  const matrix = Array.from({ length: n }, () => Array(n).fill(0));
+  CO_OCCUR.forEach(({ state1, state2, shared }) => {
+    const i = CHORD_STATES.indexOf(state1);
+    const j = CHORD_STATES.indexOf(state2);
+    if (i >= 0 && j >= 0) {
+      matrix[i][j] = shared;
+      matrix[j][i] = shared;
+    }
+  });
+
+  const CHORD_COLORS = [
+    "#d1495b",
+    "#f08c2e",
+    "#e87030",
+    "#d6b43f",
+    "#c06828",
+    "#a05820",
+    "#7b61d1",
+    "#8fa3b8",
+  ];
+
+  const el = document.getElementById("chart13");
+  el.innerHTML = "";
+  el.style.position = "relative";
+
+  const W = el.clientWidth || 500;
+  const H = Math.min(W, 500);
+  const outerR = Math.min(W, H) / 2 - 55;
+  const innerR = outerR - 24;
+
+  const svg = d3
+    .select(el)
+    .append("svg")
+    .attr("width", W)
+    .attr("height", H)
+    .style("background", "transparent");
+
+  const g = svg.append("g").attr("transform", `translate(${W / 2},${H / 2})`);
+
+  const chordLayout = d3.chord().padAngle(0.04);
+  const chords = chordLayout(matrix);
+
+  const arcGen = d3.arc().innerRadius(innerR).outerRadius(outerR);
+  const ribbonGen = d3.ribbon().radius(innerR - 1);
+
+  d3.select(".chord-tip").remove();
+  const tip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "chord-tip")
+    .style("position", "absolute")
+    .style("pointer-events", "none")
+    .style("background", BG3)
+    .style("border", `1px solid ${BORDER}`)
+    .style("border-radius", "6px")
+    .style("padding", "8px 12px")
+    .style("font-size", "13px")
+    .style("color", TEXT)
+    .style("font-family", "Source Sans 3, sans-serif")
+    .style("opacity", 0)
+    .style("transition", "opacity 0.12s")
+    .style("white-space", "nowrap")
+    .style("z-index", 9999);
+
+  const ribbonPaths = g
+    .append("g")
+    .selectAll("path")
+    .data(chords)
+    .join("path")
+    .attr("d", ribbonGen)
+    .attr("fill", (d) => CHORD_COLORS[d.source.index])
+    .attr("opacity", 0.28)
+    .attr("stroke", "none")
+    .style("cursor", "pointer");
+
+  ribbonPaths
+    .on("mouseover", function (event, d) {
+      ribbonPaths.attr("opacity", 0.06);
+      d3.select(this).attr("opacity", 0.88);
+      tip
+        .style("opacity", 1)
+        .html(
+          `<strong>${CHORD_FULL[CHORD_STATES[d.source.index]]} ↔ ${CHORD_FULL[CHORD_STATES[d.target.index]]}</strong><br>${d.source.value} shared threatened species`,
+        )
+        .style("left", event.pageX + 14 + "px")
+        .style("top", event.pageY - 10 + "px");
+    })
+    .on("mouseout", () => {
+      ribbonPaths.attr("opacity", 0.28);
+      tip.style("opacity", 0);
+    });
+
+  const groups = g.append("g").selectAll("g").data(chords.groups).join("g");
+
+  groups
+    .append("path")
+    .attr("d", arcGen)
+    .attr("fill", (d) => CHORD_COLORS[d.index])
+    .attr("stroke", BG)
+    .attr("stroke-width", 1.5)
+    .style("cursor", "pointer")
+    .on("mouseover", function (event, d) {
+      ribbonPaths.attr("opacity", (c) =>
+        c.source.index === d.index || c.target.index === d.index ? 0.75 : 0.04,
+      );
+      const total = matrix[d.index].reduce((s, v) => s + v, 0);
+      tip
+        .style("opacity", 1)
+        .html(
+          `<strong>${CHORD_FULL[CHORD_STATES[d.index]]}</strong><br>${total} total shared threatened species`,
+        )
+        .style("left", event.pageX + 14 + "px")
+        .style("top", event.pageY - 10 + "px");
+    })
+    .on("mouseout", () => {
+      ribbonPaths.attr("opacity", 0.28);
+      tip.style("opacity", 0);
+    });
+
+  groups
+    .append("text")
+    .each((d) => {
+      d.angle = (d.startAngle + d.endAngle) / 2;
+    })
+    .attr("dy", "0.35em")
+    .attr(
+      "transform",
+      (d) =>
+        `rotate(${(d.angle * 180) / Math.PI - 90}) translate(${outerR + 10}) ${d.angle > Math.PI ? "rotate(180)" : ""}`,
+    )
+    .attr("text-anchor", (d) => (d.angle > Math.PI ? "end" : "start"))
+    .attr("font-size", 12)
+    .attr("font-weight", 600)
+    .attr("font-family", "Source Sans 3, sans-serif")
+    .attr("fill", TEXT2)
+    .text((d) => CHORD_STATES[d.index]);
+}
+
+renderChordDiagram();
 
 const MAMMAL_TREND = POP_TREND.filter((d) => d.group === "Mammals");
 const chart14 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
-  height: 280,
+  height: 300,
   config: baseConfig,
   data: { values: MAMMAL_TREND },
   layer: [
@@ -4003,6 +4139,13 @@ const chart15 = {
   height: 320,
   config: baseConfig,
   data: { values: POP_TREND },
+  params: [
+    {
+      name: "groupSel15",
+      select: { type: "point", fields: ["group"] },
+      bind: "legend",
+    },
+  ],
   mark: {
     type: "line",
     point: true,
@@ -4029,8 +4172,16 @@ const chart15 = {
         domain: ["Birds", "Mammals", "Amphibians"],
         range: [STATUS_COLORS.Endangered, MAMMAL_COLOR, STATUS_COLORS.Extinct],
       },
-      legend: { orient: "top-right", title: null },
+      legend: {
+        orient: "bottom",
+        anchor: "middle",
+        direction: "horizontal",
+        columnPadding: 20,
+        title: "Click to filter",
+        titleFontSize: 10,
+      },
     },
+    opacity: { condition: { param: "groupSel15", value: 1 }, value: 0.08 },
     tooltip: [
       { field: "group", title: "Group" },
       { field: "year", title: "Year" },
