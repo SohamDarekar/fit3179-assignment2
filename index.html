@@ -13,14 +13,27 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
 
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <section class="hero">
+    <nav class="sticky-nav" id="sticky-nav" aria-label="Page sections">
+      <div class="nav-inner">
+        <a class="nav-brand" href="#hero">🦘</a>
+        <ol class="nav-links" role="list">
+          <li><a href="#overview" class="nav-link"><span class="nav-num">01</span> Overview</a></li>
+          <li><a href="#geography" class="nav-link"><span class="nav-num">02</span> Geography</a></li>
+          <li><a href="#birds" class="nav-link"><span class="nav-num">03</span> Birds</a></li>
+          <li><a href="#plants" class="nav-link"><span class="nav-num">04</span> Plants</a></li>
+          <li><a href="#forward" class="nav-link"><span class="nav-num">05</span> Looking Forward</a></li>
+        </ol>
+      </div>
+      <div class="nav-progress-bar" id="nav-progress"></div>
+    </nav>
+    <section class="hero" id="hero">
       <div class="hero-eyebrow">Australia's Biodiversity Crisis · 2026</div>
       <h1>A Nation's Wildlife <em>On the Edge</em></h1>
       <p class="hero-lead">
@@ -50,7 +63,7 @@
       </div>
     </section>
 
-    <section class="section section--dark">
+    <section class="section section--dark" id="overview">
       <div class="section-label">Section 01 - The Big Picture</div>
       <h2 class="section-title">
         2,208 species facing extinction - and counting
@@ -130,16 +143,17 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="geography">
       <div class="section-label">Section 02 - Geography of Crisis</div>
       <h2 class="section-title">Where Australia's threatened species live</h2>
       <div class="divider"></div>
       <p class="section-body">
         Threatened species are not distributed evenly across the continent.
-        States with high biodiversity and habitat diversity - Queensland, New
-        South Wales, and Western Australia - also carry the greatest threatened
+        States with high biodiversity and habitat diversity, notably Queensland,
+        New South Wales, and Western Australia, carry the greatest threatened
         species burden. Some states are home to species found nowhere else on
-        Earth, making local habitat protection critical.
+        Earth, making local habitat protection critical. Understanding <em>where</em>
+        species are concentrated reveals where conservation action is most urgent.
       </p>
 
       <div class="card" style="margin-bottom: 2rem">
@@ -199,7 +213,7 @@
           Map 2 - Endemic Threatened Species by State
         </div>
         <div class="card-desc">
-          Number of threatened species endemic to each state or territory —
+          Number of threatened species endemic to each state or territory:
           species found nowhere else in Australia. Darker shading indicates
           higher endemism. Hover for details.
         </div>
@@ -216,7 +230,7 @@
       </div>
     </section>
 
-    <section class="section section--darker">
+    <section class="section section--darker" id="birds">
       <div class="section-label">Section 03 - Birds in Crisis</div>
       <h2 class="section-title">
         Australia's threatened birds: a monitoring story
@@ -237,13 +251,17 @@
           </div>
           <div class="card-desc">
             Population monitoring index (1990 = 100) for Australian threatened
-            bird species, split by EPBC threat category. A declining index
-            suggests worsening population health.
+            bird species, split by EPBC threat category. Critically Endangered
+            birds have lost over 90% of their 1990 population. The 2019–20
+            megafires accelerated the decline for already-stressed species.
           </div>
           <div class="chart-meta">
             <span class="chart-label">Chart 6 of 14</span>
           </div>
           <div class="chart-wrap" id="chart6"></div>
+          <div class="insight-box">
+            By 2022, <strong>Critically Endangered birds</strong> had fallen to just <strong>7.8%</strong> of their 1990 baseline: a 92% collapse over 32 years. The 2019–20 megafires caused the steepest single-year drop recorded.
+          </div>
         </div>
 
         <div class="card">
@@ -259,6 +277,9 @@
             <span class="chart-label">Chart 7 of 14</span>
           </div>
           <div class="chart-wrap" id="chart7"></div>
+          <div class="insight-box">
+            <strong>New South Wales and Victoria</strong> lead monitoring coverage with the broadest range of threatened bird species tracked. States with more monitoring do not necessarily have fewer threatened species — they have greater conservation investment.
+          </div>
         </div>
       </div>
 
@@ -293,7 +314,7 @@
       </div>
     </section>
 
-    <section class="section section--dark">
+    <section class="section section--dark" id="plants">
       <div class="section-label">Section 04 - Plants &amp; Families</div>
       <h2 class="section-title">
         Australia's silent crisis: threatened plants
@@ -336,7 +357,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="forward">
       <div class="section-label">Section 05 - Looking Forward</div>
       <h2 class="section-title">
         What the data tells us - and what we must do
@@ -357,7 +378,7 @@
           <div class="card-desc">
             Dumbbell chart comparing total threatened species (red dot) against
             endemic threatened species (orange dot) per state. The gap between
-            dots reveals how many species are shared with other states — wider
+            dots reveals how many species are shared with other states; wider
             gaps indicate greater cross-border conservation need.
           </div>
           <div class="chart-meta">
@@ -396,6 +417,9 @@
           <span class="chart-label">Chart 13 of 14</span>
         </div>
         <div class="chart-wrap" id="chart14"></div>
+        <div class="insight-box">
+          Threatened mammal populations have declined by an estimated <strong>77%</strong> since 1990. The rate of decline accelerated sharply after 2010, coinciding with feral predator range expansions and intensifying drought cycles.
+        </div>
       </div>
 
       <div class="card">
@@ -413,6 +437,9 @@
           <span class="chart-label">Chart 14 of 14</span>
         </div>
         <div class="chart-wrap" id="chart15"></div>
+        <div class="insight-box">
+          <strong>Amphibians show the steepest collapse</strong>, down to ~15% of 1990 levels, driven by the <em>Batrachochytrium dendrobatidis</em> (chytrid) fungus pandemic, which has caused more vertebrate extinctions than any other disease in recorded history. All three groups show no sign of recovery.
+        </div>
       </div>
 
       <div class="pullquote" style="margin-top: 3rem">
