@@ -3461,7 +3461,7 @@ const map2 = {
       encoding: { longitude: { field: "lon", type: "quantitative" }, latitude: { field: "lat", type: "quantitative" }, text: { field: "label" } },
     },
         {
-      data: { values: [{ lon: 159, lat: -42, label: "TAS has highest endemic rate (21%)" }] },
+      data: { values: [{ lon: 134, lat: -42, label: "TAS has highest endemic rate (21%)" }] },
       mark: { type: "text", fontSize: 13, fontStyle: "italic", fontWeight:"bold", color: ANNOTATION_TEXT},
       encoding: { longitude: { field: "lon", type: "quantitative" }, latitude: { field: "lat", type: "quantitative" }, text: { field: "label" } },
     },
