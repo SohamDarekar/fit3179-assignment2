@@ -3334,7 +3334,7 @@ const chart4 = {
     },
     {
       data: { values: [{ state: "NSW", label: "NSW Leads by 2× over nearest state" }] },
-      mark: { type: "text", align: "left", dx: 70, fontSize: 13, fontStyle: "italic", fontWeight:"bold", color: ANNOTATION_TEXT, dy: -30 },
+      mark: { type: "text", align: "left", dx: 0, fontSize: 13, fontStyle: "italic", fontWeight:"bold", color: ANNOTATION_TEXT, dy: -30 },
       encoding: { y: { field: "state", type: "nominal", sort: { field: "count", op: "sum", order: "descending" } }, x: { datum: 400 }, text: { field: "label" } },
     },
   ],
